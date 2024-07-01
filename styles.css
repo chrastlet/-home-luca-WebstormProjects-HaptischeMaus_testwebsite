@@ -1,0 +1,169 @@
+Code kopieren
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    padding: 1em 0;
+}
+
+main {
+    padding: 20px;
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+button, a, div, input, select, textarea, form {
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#clickable-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#clickable-button:hover {
+    background-color: #45a049;
+}
+
+#clickable-link {
+    color: #4CAF50;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#clickable-link:hover {
+    text-decoration: underline;
+}
+
+#non-clickable-div {
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    padding: 20px;
+    width: 200px;
+    text-align: center;
+    cursor: not-allowed;
+}
+
+#non-clickable-paragraph {
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    padding: 20px;
+    cursor: not-allowed;
+}
+
+form {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 400px;
+}
+
+#scrollable-area {
+    width: 300px;
+    height: 200px; /* Feste Höhe */
+    overflow: auto; /* Scrollbalken anzeigen, wenn der Inhalt die Höhe überschreitet */
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+#context-menu-area {
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    padding: 20px;
+    text-align: center;
+    cursor: context-menu;
+}
+
+#hover-area {
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+#tooltip-area {
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    padding: 20px;
+    text-align: center;
+    cursor: help;
+}
+
+#draggable {
+    background-color: #2196F3;
+    color: white;
+    width: 100px;
+    text-align: center;
+    cursor: move;
+}
+
+#drop-zone {
+    width: 200px;
+    height: 100px;
+    border: 2px dashed #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#progress-container {
+    display: flex;
+    align-items: center;
+}
+
+#progress {
+    margin-left: 10px;
+}
+
+#modal-trigger {
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+
+
+#text-input, #textarea, select, option {
+    cursor: text;
+}
+
+input[type="range"] {
+    cursor: ew-resize;
+}

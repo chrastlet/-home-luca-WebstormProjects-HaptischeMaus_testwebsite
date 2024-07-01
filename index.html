@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mouse Interaction Test</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+    <h1>Mouse Interaction Test</h1>
+</header>
+<main>
+    <section>
+        <h2>Clickable Elements</h2>
+        <button id="clickable-button">Clickable Button</button>
+        <a href="#" id="clickable-link">Clickable Link</a>
+    </section>
+    <section>
+        <h2>Non-Clickable Elements</h2>
+        <div id="non-clickable-div">Non-Clickable Div</div>
+        <p id="non-clickable-paragraph">Non-Clickable Paragraph</p>
+    </section>
+    <section>
+        <h2>Form Elements</h2>
+        <form>
+            <label for="text-input">Text Input:</label>
+            <input type="text" id="text-input" name="text-input"><br><br>
+            <label for="checkbox">Checkbox:</label>
+            <input type="checkbox" id="checkbox" name="checkbox"><br><br>
+            <label for="radio">Radio Button:</label>
+            <input type="radio" id="radio" name="radio"><br><br>
+            <label for="select">Select Menu:</label>
+            <select id="select" name="select">
+                <option value="option1">Option 1</option>
+                <option value="option2">Option 2</option>
+                <option value="option3">Option 3</option>
+            </select><br><br>
+            <label for="textarea">Text Area:</label>
+            <textarea id="textarea" name="textarea" rows="4" cols="50"></textarea><br><br>
+            <label for="range">Slider:</label>
+            <input type="range" id="range" name="range" min="0" max="100"><br><br>
+            <input type="submit" value="Submit">
+        </form>
+    </section>
+    <section>
+        <h2>Scrollable Area</h2>
+        <div id="scrollable-area">
+            <p>Scroll down to see more content...</p>
+            <p>scroll further</p>
+            <p>scroll further</p>
+            <p>scroll further</p>
+            <p>scroll further</p>
+            <p>scroll further</p>
+            <p>scroll further</p>
+            <p>scroll further</p>
+            <p>scroll further</p>
+            <p>scroll further</p>
+            <p>scroll further</p>
+            <p>scroll further</p>
+            <p>scroll further</p>
+            <p>scroll further</p>
+            <p>scroll further</p>
+            <p>scroll further</p>
+            <p>scroll further</p>
+            <p>scroll further</p>
+            <p>scroll further</p>
+            <p>the end</p>
+       </div>
+    </section>
+
+    <section>
+        <div id="context-menu-area">Right-click here for context menu</div>
+        <div id="hover-area">Hover over me!</div>
+        <div id="tooltip-area" title="I am a tooltip!">Hover over me to see the tooltip</div>
+        <div id="draggable" draggable="true">Drag Me!</div>
+        <div id="drop-zone">Drop Zone</div>
+        <div id="progress-container">
+            <label for="progress">Progress Bar:</label>
+            <progress id="progress" value="50" max="100"></progress>
+        </div>
+        <div id="modal-trigger">Click here to open modal</div>
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <p>This is a modal window.</p>
+            </div>
+        </div>
+        <label for="autocomplete-input">Autocomplete Input:</label>
+        <input id="autocomplete-input" type="text" name="autocomplete">
+
+    </section>
+</main>
+<script src="script.js"></script>
+</body>
+<script src="script.js"></script>
+
+</html>
