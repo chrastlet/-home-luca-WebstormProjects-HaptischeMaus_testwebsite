@@ -25,30 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-
-
-
-    const connectButton = document.getElementById('connect-arduino');
-
-    connectButton.addEventListener('click', async () => {
-        try {
-            port = await navigator.serial.requestPort();
-            console.log('Serial port requested');
-            await port.open({ baudRate: 9600 });
-            console.log('Serial port opened');
-
-            writer = port.writable.getWriter();
-            console.log('Writer created');
-
-            console.log('Connected to Arduino');
-        } catch (e) {
-            console.error('Failed to connect to Arduino:', e.message);
-            alert('Failed to connect to Arduino. Please ensure the port is correct and you have permissions.');
-        }
-    });
-
     const sendToArduino = async (message, data) => {
-        if (writer) {
             try {
                 ws.send({
                     message: message,
@@ -58,10 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (e) {
                 console.error('Error writing to serial port:', e);
             }
-        } else {
-            console.warn('Writer is not available');
         }
-    };
+
+
 
     document.getElementById('clickable-button').addEventListener('click', () => {
         console.log('Clickable button clicked');
@@ -102,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sendToArduino('radio', 100);
     });
 
+
     document.getElementById('select').addEventListener('click', () => {
         sendToArduino('select_click', 100);
     });
@@ -113,13 +90,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('range').addEventListener('input', (event) => {
         console.log(`Slider value: ${event.target.value}`);
-        sendToArduino('range',${event.target.value});
+        sendToArduino('range', `${event.target.value}`);
     });
 
     document.querySelector('form').addEventListener('submit', (event) => {
         event.preventDefault();
         sendToArduino('submit', 100);
     });
+
 
     const scrollableArea = document.getElementById('scrollable-area');
     scrollableArea.addEventListener('scroll', () => {
