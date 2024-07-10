@@ -39,6 +39,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+    // myModal functionality
+    const myModal = document.getElementById("modal");
+    const myModalTrigger = document.getElementById("modal-trigger");
+    const closeButton = document.getElementsByClassName("close-button")[0];
+
+    myModalTrigger.onclick = function () {
+        myModal.style.display = "block";
+        ws.send(JSON.stringify({action:'modalOpens', data:100}));
+
+    }
+
+    closeButton.onclick = function () {
+        myModal.style.display = "none";
+        ws.send(JSON.stringify({action:'modalCloses', data:100}));
+
+    }
+
+    window.onclick = function (event) {
+        if (event.target == myModal) {
+            myModal.style.display = "none";
+        }
+    }
+
+
     // Drag and drop functionality
     const draggable = document.getElementById('draggable');
     const dropZone = document.getElementById('drop-zone');
@@ -62,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const xPercent = (x / rect.width) * 100;
         const yPercent = (y / rect.height) * 100;
 
-        ws.send(JSON.stringify({action:'startDrag', data:[xPercent, yPercent]}));
+        ws.send(JSON.stringify({action:'startDrag', data:[xPercent, yPercent, rect.width, rect.height]}));
 
     });
 
