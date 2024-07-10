@@ -3,6 +3,31 @@ document.addEventListener('DOMContentLoaded', () => {
     let writer;
     let textInputInterval;
 
+    const ws = new WebSocket('ws://192.168.137.212/ws');
+    const statusDisplay = document.getElementById('status');
+    const sendButton = document.getElementById('sendButton');
+
+    ws.onopen= function(){
+        console.log("Websocket connected");
+    }
+    ws.onmessage = function(event) {
+        console.log('Message from server:', event.data);
+    };
+
+    ws.onclose = function() {
+        statusDisplay.innerText = 'Disconnected';
+        console.log('WebSocket disconnected');
+    };
+
+    ws.onerror = function(error) {
+        console.error('WebSocket error:', error);
+    };
+
+
+
+
+
+
     const connectButton = document.getElementById('connect-arduino');
 
     connectButton.addEventListener('click', async () => {
@@ -22,10 +47,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    const sendToArduino = async (message) => {
+    const sendToArduino = async (message, data) => {
         if (writer) {
             try {
-                await writer.write(new TextEncoder().encode(message + '\n'));
+                ws.send({
+                    message: message,
+                    data: data
+                })
                 console.log('Message sent to Arduino:', message);
             } catch (e) {
                 console.error('Error writing to serial port:', e);
@@ -37,18 +65,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('clickable-button').addEventListener('click', () => {
         console.log('Clickable button clicked');
-        sendToArduino('C');
+        sendToArduino('button',100);
     });
 
     document.getElementById('clickable-link').addEventListener('click', (event) => {
         event.preventDefault();
         console.log('Clickable link clicked');
-        sendToArduino('L');
+        sendToArduino('link', 100);
     });
 
     document.getElementById('text-input').addEventListener('focus', () => {
         textInputInterval = setInterval(() => {
-            sendToArduino('F');
+            sendToArduino('text-input', 100);
         }, 1000); // Continuously send 'F' command every second while focused
     });
 
@@ -58,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('textarea').addEventListener('focus', () => {
         textInputInterval = setInterval(() => {
-            sendToArduino('F');
+            sendToArduino('textarea',100);
         }, 1000); // Continuously send 'F' command every second while focused
     });
 
@@ -67,30 +95,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('checkbox').addEventListener('change', () => {
-        sendToArduino('B');
+        sendToArduino('checkbox', 100);
     });
 
     document.getElementById('radio').addEventListener('change', () => {
-        sendToArduino('R');
+        sendToArduino('radio', 100);
     });
 
     document.getElementById('select').addEventListener('click', () => {
-        sendToArduino('D');
+        sendToArduino('select_click', 100);
     });
 
     document.getElementById('select').addEventListener('change', (event) => {
         const value = event.target.value;
-        sendToArduino(`S${value}`);
+        sendToArduino('select_change',100);
     });
 
     document.getElementById('range').addEventListener('input', (event) => {
         console.log(`Slider value: ${event.target.value}`);
-        sendToArduino(`S${event.target.value}`);
+        sendToArduino('range',${event.target.value});
     });
 
     document.querySelector('form').addEventListener('submit', (event) => {
         event.preventDefault();
-        sendToArduino('U');
+        sendToArduino('submit', 100);
     });
 
     const scrollableArea = document.getElementById('scrollable-area');
