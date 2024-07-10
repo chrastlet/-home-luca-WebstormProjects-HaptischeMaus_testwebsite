@@ -39,6 +39,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+    // Drag and drop functionality
+    const draggable = document.getElementById('draggable');
+    const dropZone = document.getElementById('drop-zone');
+
+    draggable.addEventListener('dragstart', (event) => {
+        event.dataTransfer.setData('text', event.target.id);
+        console.log('Dragging started');
+        ws.send(JSON.stringify({action:'startDrag', data:100}));
+    });
+
+    dropZone.addEventListener('dragover', (event) => {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+
+        // Berechne die Mauskoordinaten relativ zur dropZone
+        const rect = dropZone.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+
+        // Berechne die Prozentwerte
+        const xPercent = (x / rect.width) * 100;
+        const yPercent = (y / rect.height) * 100;
+
+        ws.send(JSON.stringify({action:'startDrag', data:[xPercent, yPercent]}));
+
+    });
+
+    dropZone.addEventListener('drop', (event) => {
+        event.preventDefault();
+        const data = event.dataTransfer.getData('text');
+        const draggableElement = document.getElementById(data);
+        dropZone.appendChild(draggableElement);
+        console.log('Dropped in drop zone');
+        ws.send(JSON.stringify({action:'drop', data:100}));
+
+    });
+
+
     document.getElementById('clickable-button').addEventListener('click', () => {
         console.log('Clickable button clicked');
         sendToArduino('button',100);
