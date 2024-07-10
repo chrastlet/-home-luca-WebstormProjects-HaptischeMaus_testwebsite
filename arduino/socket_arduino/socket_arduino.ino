@@ -103,84 +103,92 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
 
 // Pattern for Clickable Button: Light vibration on all four motors
 void clickableButtonPattern() {
+    uint8_t pwmValue = 128; // 50% duty cycle
     for (uint8_t i = 0; i < sizeof(VIBRATORS); i++) {
-        digitalWrite(VIBRATORS[i], HIGH);
+        analogWrite(VIBRATORS[i], pwmValue);
     }
     delay(100); // Buzz for 100 ms
     for (uint8_t i = 0; i < sizeof(VIBRATORS); i++) {
-        digitalWrite(VIBRATORS[i], LOW);
+        analogWrite(VIBRATORS[i], 0); // Turn off vibration
     }
 }
 
 // Pattern for Clickable Link: Movement from bottom to top
 void clickableLinkPattern() {
+    uint8_t pwmValue = 128; // 50% duty cycle
     for (int i = sizeof(VIBRATORS) - 1; i >= 0; i--) {
-        digitalWrite(VIBRATORS[i], HIGH);
+        analogWrite(VIBRATORS[i], pwmValue);
         delay(50);
-        digitalWrite(VIBRATORS[i], LOW);
+        analogWrite(VIBRATORS[i], 0);
     }
 }
 
 // Pattern for Text Input Field & Text Area: Continuous light vibration while focused
 void textInputPattern() {
+    uint8_t pwmValue = 128; // 50% duty cycle
     for (int i = 0; i < 3; i++) {
-        digitalWrite(VIBRATORS[2], HIGH); // Mid vibrator (port 15)
+        analogWrite(VIBRATORS[2], pwmValue); // Mid vibrator (port 15)
         delay(30);
-        digitalWrite(VIBRATORS[2], LOW);
+        analogWrite(VIBRATORS[2], 0);
         delay(30);
     }
 }
 
 // Pattern for Checkbox: Cross vibration or check vibration
 void checkboxPattern() {
-    digitalWrite(VIBRATORS[0], HIGH);
-    digitalWrite(VIBRATORS[4], HIGH);
+    uint8_t pwmValue = 128; // 50% duty cycle
+    analogWrite(VIBRATORS[0], pwmValue);
+    analogWrite(VIBRATORS[4], pwmValue);
     delay(100);
-    digitalWrite(VIBRATORS[0], LOW);
-    digitalWrite(VIBRATORS[4], LOW);
+    analogWrite(VIBRATORS[0], 0);
+    analogWrite(VIBRATORS[4], 0);
     delay(100);
-    digitalWrite(VIBRATORS[1], HIGH);
-    digitalWrite(VIBRATORS[3], HIGH);
+    analogWrite(VIBRATORS[1], pwmValue);
+    analogWrite(VIBRATORS[3], pwmValue);
     delay(100);
-    digitalWrite(VIBRATORS[1], LOW);
-    digitalWrite(VIBRATORS[3], LOW);
+    analogWrite(VIBRATORS[1], 0);
+    analogWrite(VIBRATORS[3], 0);
 }
 
 // Pattern for Radio Button: Circular movement across all vibrators
 void radioButtonPattern() {
+    uint8_t pwmValue = 128; // 50% duty cycle
     for (int i = 0; i < sizeof(VIBRATORS); i++) {
-        digitalWrite(VIBRATORS[i], HIGH);
+        analogWrite(VIBRATORS[i], pwmValue);
         delay(50);
-        digitalWrite(VIBRATORS[i], LOW);
+        analogWrite(VIBRATORS[i], 0);
     }
 }
 
 // Pattern for Select Menu Dropdown: From top to bottom
 void dropdownPattern() {
+    uint8_t pwmValue = 128; // 50% duty cycle
     for (int i = 0; i < sizeof(VIBRATORS); i++) {
-        digitalWrite(VIBRATORS[i], HIGH);
+        analogWrite(VIBRATORS[i], pwmValue);
         delay(50);
-        digitalWrite(VIBRATORS[i], LOW);
+        analogWrite(VIBRATORS[i], 0);
     }
 }
 
+
 // Pattern for Slider: Position indicated between the 3 middle motors based on percentage
 void sliderPattern(int value) {
+    uint8_t pwmValue = 128; // 50% duty cycle
     int position = map(value, 0, 100, 1, 3);
-    digitalWrite(VIBRATORS[position], HIGH);
+    analogWrite(VIBRATORS[position], pwmValue);
     delay(100);
-    digitalWrite(VIBRATORS[position], LOW);
+    analogWrite(VIBRATORS[position], 0);
 }
-
 // Pattern for Submit: Two vibrations, the second one is longer
 void submitPattern() {
+    uint8_t pwmValue = 128; // 50% duty cycle
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < sizeof(VIBRATORS); j++) {
-            digitalWrite(VIBRATORS[j], HIGH);
+            analogWrite(VIBRATORS[j], pwmValue);
         }
         delay(i == 0 ? 100 : 300);
         for (int j = 0; j < sizeof(VIBRATORS); j++) {
-            digitalWrite(VIBRATORS[j], LOW);
+            analogWrite(VIBRATORS[j], 0);
         }
         delay(100);
     }
@@ -188,18 +196,20 @@ void submitPattern() {
 
 // Pattern for Scroll: Mimic scroll movement with motors
 void scrollPattern() {
-    for (int i = 0; i < sizeof(VIBRATORS); i++) {
-        digitalWrite(VIBRATORS[i], HIGH);
+    uint8_t pwmValue = 128; // 50% duty cycle
+    for (int i = 0; i < sizeof(VIBRATORS) / sizeof(VIBRATORS[0]); i++) {
+        analogWrite(VIBRATORS[i], pwmValue);
         delay(50);
-        digitalWrite(VIBRATORS[i], LOW);
+        analogWrite(VIBRATORS[i], 0);
     }
 }
 
 // Pattern for End of Scroll: Strong vibration in scroll direction
 void endScrollPattern() {
-    digitalWrite(VIBRATORS[4], HIGH); // Bottom vibrator (port 33)
+    uint8_t pwmValue = 128; // 50% duty cycle
+    analogWrite(VIBRATORS[4], pwmValue); // Bottom vibrator (port 33)
     delay(300);
-    digitalWrite(VIBRATORS[4], LOW);
+    analogWrite(VIBRATORS[4], 0);
 }
 
 //Pattern for context menu
