@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let writer;
     let textInputInterval;
 
-    const ws = new WebSocket('ws://192.168.137.212/ws');
+    const ws = new WebSocket('ws://192.168.114.153/ws');
     const statusDisplay = document.getElementById('status');
     const sendButton = document.getElementById('sendButton');
 
@@ -27,10 +27,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const sendToArduino = async (message, data) => {
             try {
-                ws.send({
+                ws.send(JSON.stringify({
                     message: message,
                     data: data
-                })
+                }));
+
                 console.log('Message sent to Arduino:', message);
             } catch (e) {
                 console.error('Error writing to serial port:', e);
