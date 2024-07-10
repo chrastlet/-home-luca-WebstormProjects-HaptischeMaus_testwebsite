@@ -1,7 +1,7 @@
 #include <WiFi.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
-#include <Arduino_JSON.h>
+#include "ArduinoJson.h"
 
 const char* ssid = "Hotspot-ESP32";
 const char* password = "password";
@@ -32,12 +32,11 @@ void setup() {
     }
 
   //submitPattern();
-/*
     connectToWifi();
     ws.onEvent(onEvent);
     server.addHandler(&ws);
     server.begin();
-*/
+
 }
 
 
@@ -93,19 +92,51 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
     const char* msg = doc["message"];
     const char* dataValue = doc["data"];
 
-    switch(msg){
-        case 'dragstart':
-        break;
+
+    
+if (strcmp(msg, "startdrag") == 0) {
+    // Code für startdrag
+} else if (strcmp(msg, "dragover") == 0) {
+    // Code für dragover
+} else if (strcmp(msg, "drop") == 0) {
+    // Code für drop
+} else if (strcmp(msg, "button") == 0) {
+    // Code für button
+} else if (strcmp(msg, "link") == 0) {
+    // Code für link
+} else if (strcmp(msg, "text-input") == 0) {
+    // Code für text-input
+} else if (strcmp(msg, "textarea") == 0) {
+    // Code für textarea
+} else if (strcmp(msg, "checkbox") == 0) {
+    // Code für checkbox
+} else if (strcmp(msg, "radio") == 0) {
+    // Code für radio
+} else if (strcmp(msg, "select_click") == 0) {
+    // Code für select_click
+} else if (strcmp(msg, "select_change") == 0) {
+    // Code für select_change
+} else if (strcmp(msg, "range") == 0) {
+    // Code für range
+} else if (strcmp(msg, "submit") == 0) {
+    // Code für submit
+} else if (strcmp(msg, "endVertical") == 0) {
+    // Code für endVertical
+} else if (strcmp(msg, "endHorizontal") == 0) {
+    // Code für endHorizontal
+} else {
+    // Code für den Fall, dass kein anderer Fall zutrifft
+}
 
 
 
-    }
+    
     // Variablen ausgeben
     Serial.printf("WebSocket JSON message received: message=%s, data=%s\n", msg, dataValue);
   }
 }
 
-}
+
 
 
 // Pattern for Clickable Button: Light vibration on all four motors

@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const xPercent = (x / rect.width) * 100;
         const yPercent = (y / rect.height) * 100;
 
-        ws.send(JSON.stringify({action:'startDrag', data:[xPercent, yPercent, rect.width, rect.height]}));
+        ws.send(JSON.stringify({action:'dragover', data:[xPercent, yPercent, rect.width, rect.height]}));
 
     });
 
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('select').addEventListener('change', (event) => {
         const value = event.target.value;
-        sendToArduino('select_change',100);
+        sendToArduino('select_change',value);
     });
 
     document.getElementById('range').addEventListener('input', (event) => {
@@ -164,9 +164,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const scrollableArea = document.getElementById('scrollable-area');
     scrollableArea.addEventListener('scroll', () => {
         if (scrollableArea.scrollTop + scrollableArea.clientHeight >= scrollableArea.scrollHeight || scrollableArea.scrollTop === 0) {
-            sendToArduino('E'); // End of vertical scroll
+            sendToArduino('endVertical'); // End of vertical scroll
         } else if (scrollableArea.scrollLeft + scrollableArea.clientWidth >= scrollableArea.scrollWidth || scrollableArea.scrollLeft === 0) {
-            sendToArduino('E'); // End of horizontal scroll
+            sendToArduino('endHorizontal'); // End of horizontal scroll
         }
     });
 
