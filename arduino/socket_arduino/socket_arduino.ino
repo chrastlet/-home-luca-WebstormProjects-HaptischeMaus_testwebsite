@@ -123,6 +123,7 @@ void clickableLinkPattern() {
     }
 }
 
+
 // Pattern for Text Input Field & Text Area: Continuous light vibration while focused
 void textInputPattern() {
     uint8_t pwmValue = 128; // 50% duty cycle
@@ -131,6 +132,49 @@ void textInputPattern() {
         delay(30);
         analogWrite(VIBRATORS[2], 0);
         delay(30);
+    }
+}
+void Waitcursor() {
+    for (int i = sizeof(VIBRATORS) - 1; i >= 0; i--) {
+    // Set the vibration intensity using analogWrite
+    analogWrite(VIBRATORS[i], 200); // Adjust the value to control the intensity
+    delay(100); // Vibrate for 100 milliseconds
+    analogWrite(VIBRATORS[i], 0); // Turn off the motor
+  }
+}
+void PointerCursor() {
+    for (int i = sizeof(VIBRATORS) - 1; i >= 0; i--) {
+        // Set the vibration intensity using analogWrite
+        analogWrite(VIBRATORS[i], 150); // Adjust the value to control the intensity
+        delay(100); // Vibrate for 100 milliseconds
+        analogWrite(VIBRATORS[i], 0); // Turn off the motor
+    }
+}
+
+void CrosshairCursor() {
+    for (int i = sizeof(VIBRATORS) - 1; i >= 0; i--) {
+        // Set the vibration intensity using analogWrite
+        analogWrite(VIBRATORS[i], 100); // Adjust the value to control the intensity
+        delay(100); // Vibrate for 100 milliseconds
+        analogWrite(VIBRATORS[i], 0); // Turn off the motor
+    }
+}
+
+void TextCursor() {
+    for (int i = sizeof(VIBRATORS) - 1; i >= 0; i--) {
+        // Set the vibration intensity using analogWrite
+        analogWrite(VIBRATORS[i], 50); // Adjust the value to control the intensity
+        delay(100); // Vibrate for 100 milliseconds
+        analogWrite(VIBRATORS[i], 0); // Turn off the motor
+    }
+}
+
+void MoveCursor() {
+    for (int i = sizeof(VIBRATORS) - 1; i >= 0; i--) {
+        // Set the vibration intensity using analogWrite
+        analogWrite(VIBRATORS[i], 255); // Adjust the value to control the intensity
+        delay(100); // Vibrate for 100 milliseconds
+        analogWrite(VIBRATORS[i], 0); // Turn off the motor
     }
 }
 
