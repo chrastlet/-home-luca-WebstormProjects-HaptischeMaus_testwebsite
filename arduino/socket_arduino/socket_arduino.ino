@@ -93,6 +93,13 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
     const char* msg = doc["message"];
     const char* dataValue = doc["data"];
 
+    switch(msg){
+        case 'dragstart':
+        break;
+
+
+
+    }
     // Variablen ausgeben
     Serial.printf("WebSocket JSON message received: message=%s, data=%s\n", msg, dataValue);
   }
