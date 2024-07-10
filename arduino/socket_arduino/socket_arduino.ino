@@ -1,7 +1,7 @@
 #include <WiFi.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
-#include <Arduino_JSON.h>
+#include "ArduinoJson.h"
 
 const char* ssid = "Hotspot-ESP32";
 const char* password = "password";
@@ -13,6 +13,7 @@ const int links = 19;
 const int mitte = 17;
 const int oben = 21;
 
+uint8_t pwmValue = 250; // 50% duty cycle
 
 
 int sliderValue = 0;  // Variable to store the slider value
@@ -27,17 +28,18 @@ AsyncWebSocket ws("/ws");
 void setup() {
     Serial.begin(9600);  // Initialize serial communication
     // Initialize all vibrator pins as outputs and set them to LOW
-    for(uint8_t i = 0; i < sizeof(VIBRATORS); i++) {
+    for(uint8_t i = 0; i < 5; i++) {
+              Serial.println(VIBRATORS[i]);
+
         pinMode(VIBRATORS[i], OUTPUT);
     }
 
   //submitPattern();
-/*
     connectToWifi();
     ws.onEvent(onEvent);
     server.addHandler(&ws);
     server.begin();
-*/
+
 }
 
 
@@ -72,38 +74,108 @@ void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
 }
 
 
+// Funktion zur Verarbeitung der WebSocket-Nachricht
 void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
-  // Konvertiere die empfangenen Daten in eine Zeichenkette
-  AwsFrameInfo *info = (AwsFrameInfo*)arg;
-  if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
-    data[len] = 0;  // Null-terminate the string
-    String message = (char*)data;
+    // Konvertiere die empfangenen Daten in eine Zeichenkette
+    AwsFrameInfo *info = (AwsFrameInfo*)arg;
+    if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
+        data[len] = 0;  // Null-terminate the string
+        String message = (char*)data;
 
-    // JSON-Dokument erstellen
-    StaticJsonDocument<200> doc;
-    DeserializationError error = deserializeJson(doc, message);
+        // JSON-Dokument erstellen
+        StaticJsonDocument<200> doc;
+        DeserializationError error = deserializeJson(doc, message);
 
-    // Überprüfen, ob das Parsen erfolgreich war
-    if (error) {
-      Serial.printf("Fehler beim Parsen der JSON-Nachricht: %s\n", error.c_str());
-      return;
+        // Überprüfen, ob das Parsen erfolgreich war
+        if (error) {
+            Serial.printf("Fehler beim Parsen der JSON-Nachricht: %s\n", error.c_str());
+            return;
+        }
+
+        // JSON-Nachricht verarbeiten
+        const char* msg = doc["message"];
+
+        if (strcmp(msg, "startdrag") == 0) {
+            // Code für startdrag
+            startDrag();
+        } else if (strcmp(msg, "dragover") == 0) {
+            JsonArray dataArray = doc["data"];
+            int data[4];
+            for (size_t i = 0; i < dataArray.size() && i < 4; ++i) {
+                data[i] = dataArray[i];
+            }
+            dragOver(data[0], data[1], data[2], data[3]);
+        } else if (strcmp(msg, "drop") == 0) {
+            drop();
+        } else if (strcmp(msg, "button") == 0) {
+            clickableButtonPattern();
+        } else if (strcmp(msg, "link") == 0) {
+            clickableLinkPattern();
+        } else if (strcmp(msg, "text-input") == 0) {
+            textInputPattern();
+        } else if (strcmp(msg, "textarea") == 0) {
+            textInputPattern();
+        } else if (strcmp(msg, "checkbox") == 0) {
+            checkboxPattern();
+        } else if (strcmp(msg, "radio") == 0) {
+            radioButtonPattern();
+        } else if (strcmp(msg, "select_click") == 0) {
+            selectClickPattern();
+        } else if (strcmp(msg, "select_change") == 0) {
+            JsonArray dataArray = doc["data"];
+            int data[2];
+            for (size_t i = 0; i < dataArray.size() && i < 2; ++i) {
+                data[i] = dataArray[i];
+            }
+            selectChangePattern(data[0], data[1]);
+        } else if (strcmp(msg, "range") == 0) {
+            int data = doc["data"];
+            sliderPattern(data);
+        } else if (strcmp(msg, "submit") == 0) {
+            submitPattern();
+        } else if (strcmp(msg, "endVertical") == 0) {
+            // Code für endVertical
+        } else if (strcmp(msg, "endHorizontal") == 0) {
+            // Code für endHorizontal
+        } else {
+            // Code für den Fall, dass kein anderer Fall zutrifft
+        }
+
+        // Variablen ausgeben
+        Serial.printf("WebSocket JSON message received: message=%s\n", msg);
     }
-
-    // JSON-Nachricht verarbeiten
-    const char* msg = doc["message"];
-    const char* dataValue = doc["data"];
-
-    // Variablen ausgeben
-    Serial.printf("WebSocket JSON message received: message=%s, data=%s\n", msg, dataValue);
-  }
 }
 
+
+
+    void startDrag(){
+        
+    }
+
+    void drop(){
+
+    }
+
+   void selectClickPattern(){
+
+   }
+
+  void selectChangePattern(int cur, int max){
+
+  }
+
+
+void smoothTransition(int motor1, int motor2, int dauer) {
+  for (int i = 0; i <= 255; i++) {
+    analogWrite(motor1, 255 - i);  // Motor1 verringern
+    analogWrite(motor2, i);        // Motor2 erhöhen
+    delay(dauer / 255);            // Wartezeit, um die Dauer gleichmäßig zu verteilen
+  }
 }
 
 
 // Pattern for Clickable Button: Light vibration on all four motors
 void clickableButtonPattern() {
-    uint8_t pwmValue = 128; // 50% duty cycle
     for (uint8_t i = 0; i < sizeof(VIBRATORS); i++) {
         analogWrite(VIBRATORS[i], pwmValue);
     }
@@ -115,7 +187,6 @@ void clickableButtonPattern() {
 
 // Pattern for Clickable Link: Movement from bottom to top
 void clickableLinkPattern() {
-    uint8_t pwmValue = 128; // 50% duty cycle
     for (int i = sizeof(VIBRATORS) - 1; i >= 0; i--) {
         analogWrite(VIBRATORS[i], pwmValue);
         delay(50);
@@ -126,11 +197,10 @@ void clickableLinkPattern() {
 
 // Pattern for Text Input Field & Text Area: Continuous light vibration while focused
 void textInputPattern() {
-    uint8_t pwmValue = 128; // 50% duty cycle
     for (int i = 0; i < 3; i++) {
-        analogWrite(VIBRATORS[2], pwmValue); // Mid vibrator (port 15)
+        analogWrite(mitte, pwmValue); // Mid vibrator (port 15)
         delay(30);
-        analogWrite(VIBRATORS[2], 0);
+        analogWrite(mitte, 0);
         delay(30);
     }
 }
@@ -180,33 +250,34 @@ void MoveCursor() {
 
 // Pattern for Checkbox: Cross vibration or check vibration
 void checkboxPattern() {
-    uint8_t pwmValue = 128; // 50% duty cycle
-    analogWrite(VIBRATORS[0], pwmValue);
-    analogWrite(VIBRATORS[4], pwmValue);
-    delay(100);
-    analogWrite(VIBRATORS[0], 0);
-    analogWrite(VIBRATORS[4], 0);
-    delay(100);
-    analogWrite(VIBRATORS[1], pwmValue);
-    analogWrite(VIBRATORS[3], pwmValue);
-    delay(100);
-    analogWrite(VIBRATORS[1], 0);
-    analogWrite(VIBRATORS[3], 0);
+  //von links nach unten smooth
+    // Übergang von links zu unten
+  smoothTransition(links, unten, 500); // Sanfter Übergang von links nach unten über 1000 ms
+
+  // Übergang von unten zu rechts
+  smoothTransition(unten, rechts, 500); // Sanfter Übergang von unten nach rechts über 1000 ms
+
+  // Übergang von rechts zu links (zurücksetzen)
+  smoothTransition(rechts, links, 500); // Sanfter Übergang von rechts nach links über 1000 ms
+  
+  delay(2000); // Wartezeit vor der nächsten Bewegung
+
 }
 
 // Pattern for Radio Button: Circular movement across all vibrators
 void radioButtonPattern() {
-    uint8_t pwmValue = 128; // 50% duty cycle
-    for (int i = 0; i < sizeof(VIBRATORS); i++) {
-        analogWrite(VIBRATORS[i], pwmValue);
-        delay(50);
-        analogWrite(VIBRATORS[i], 0);
-    }
+  smoothTransition(links, oben, 100); 
+
+  smoothTransition(oben, rechts, 100); 
+
+  smoothTransition(rechts, unten, 100); 
+
+  smoothTransition(unten, links, 100); 
+
 }
 
 // Pattern for Select Menu Dropdown: From top to bottom
 void dropdownPattern() {
-    uint8_t pwmValue = 128; // 50% duty cycle
     for (int i = 0; i < sizeof(VIBRATORS); i++) {
         analogWrite(VIBRATORS[i], pwmValue);
         delay(50);
@@ -217,7 +288,6 @@ void dropdownPattern() {
 
 // Pattern for Slider: Position indicated between the 3 middle motors based on percentage
 void sliderPattern(int value) {
-    uint8_t pwmValue = 128; // 50% duty cycle
     int position = map(value, 0, 100, 1, 3);
     analogWrite(VIBRATORS[position], pwmValue);
     delay(100);
@@ -225,7 +295,6 @@ void sliderPattern(int value) {
 }
 // Pattern for Submit: Two vibrations, the second one is longer
 void submitPattern() {
-    uint8_t pwmValue = 128; // 50% duty cycle
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < sizeof(VIBRATORS); j++) {
             analogWrite(VIBRATORS[j], pwmValue);
@@ -240,7 +309,6 @@ void submitPattern() {
 
 // Pattern for Scroll: Mimic scroll movement with motors
 void scrollPattern() {
-    uint8_t pwmValue = 128; // 50% duty cycle
     for (int i = 0; i < sizeof(VIBRATORS) / sizeof(VIBRATORS[0]); i++) {
         analogWrite(VIBRATORS[i], pwmValue);
         delay(50);
@@ -250,7 +318,6 @@ void scrollPattern() {
 
 // Pattern for End of Scroll: Strong vibration in scroll direction
 void endScrollPattern() {
-    uint8_t pwmValue = 128; // 50% duty cycle
     analogWrite(VIBRATORS[4], pwmValue); // Bottom vibrator (port 33)
     delay(300);
     analogWrite(VIBRATORS[4], 0);
@@ -310,7 +377,7 @@ void tooltipPattern() {
 }
 
 //Pattern fordropzone
-void dropzonePattern(int x, int y, int max_x, int max_y){
+void dragOver(int x, int y, int max_x, int max_y){
 //position darstellen
   float l = 255;
   float o = 255;
@@ -535,7 +602,11 @@ void notAllowedPattern() {
 }
 
 
-
+//
+//
+//
+//
+//
 
 
 
@@ -544,9 +615,12 @@ void loop() {
   // Main code here
 
   //zu stark
+
+
+  /*
   tooltipPattern();
   delay(2000);
-    /*
+    
   
   hoverPattern();
   delay(2000);

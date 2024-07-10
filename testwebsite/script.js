@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let writer;
     let textInputInterval;
 
-    const ws = new WebSocket('ws://192.168.137.212/ws');
+    const ws = new WebSocket('ws://192.168.114.153/ws');
     const statusDisplay = document.getElementById('status');
     const sendButton = document.getElementById('sendButton');
 
@@ -24,16 +24,17 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const sendToArduino = async (message, data) => {
-        try {
-            ws.send(JSON.stringify({
-                message: message,
-                data: data
-            }));
-            console.log('Message sent to Arduino:', message);
-        } catch (e) {
-            console.error('Error writing to serial port:', e);
+            try {
+                ws.send(JSON.stringify({
+                    message: message,
+                    data: data
+                }));
+
+                console.log('Message sent to Arduino:', message);
+            } catch (e) {
+                console.error('Error writing to serial port:', e);
+            }
         }
-    };
 
     // Modal functionality
     const myModal = document.getElementById("modal");
@@ -76,7 +77,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const xPercent = (x / rect.width) * 100;
         const yPercent = (y / rect.height) * 100;
 
-        sendToArduino('startDrag', [xPercent, yPercent, rect.width, rect.height]);
+        ws.send(JSON.stringify({action:'dragover', data:[xPercent, yPercent, rect.width, rect.height]}));
+
     });
 
     dropZone.addEventListener('drop', (event) => {
@@ -133,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('select').addEventListener('change', (event) => {
         const value = event.target.value;
-        sendToArduino('select_change', 100);
+        sendToArduino('select_change',value);
     });
 
     document.getElementById('range').addEventListener('input', (event) => {
@@ -149,41 +151,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const scrollableArea = document.getElementById('scrollable-area');
     scrollableArea.addEventListener('scroll', () => {
         if (scrollableArea.scrollTop + scrollableArea.clientHeight >= scrollableArea.scrollHeight || scrollableArea.scrollTop === 0) {
-            sendToArduino('E');
+            sendToArduino('endVertical'); // End of vertical scroll
         } else if (scrollableArea.scrollLeft + scrollableArea.clientWidth >= scrollableArea.scrollWidth || scrollableArea.scrollLeft === 0) {
-            sendToArduino('E');
+            sendToArduino('endHorizontal'); // End of horizontal scroll
         }
     });
-
-    // Cursor change functionality
-    document.getElementById('wait-cursor-button').addEventListener('click', () => {
-        changeCursorAndSendMessage('wait', 'cursor_wait');
-    });
-
-    document.getElementById('pointer-cursor-button').addEventListener('click', () => {
-        changeCursorAndSendMessage('pointer', 'cursor_pointer');
-    });
-
-    document.getElementById('crosshair-cursor-button').addEventListener('click', () => {
-        changeCursorAndSendMessage('crosshair', 'cursor_crosshair');
-    });
-
-    document.getElementById('text-cursor-button').addEventListener('click', () => {
-        changeCursorAndSendMessage('text', 'cursor_text');
-    });
-
-    document.getElementById('move-cursor-button').addEventListener('click', () => {
-        changeCursorAndSendMessage('move', 'cursor_move');
-    });
-
-    function changeCursorAndSendMessage(cursorStyle, message) {
-        document.body.style.cursor = cursorStyle;
-        setTimeout(() => {
-            document.body.style.cursor = 'default';
-        }, 30000);
-
-        sendToArduino(message, 100);
-    }
 
     // Add any additional event listeners as needed
 });
