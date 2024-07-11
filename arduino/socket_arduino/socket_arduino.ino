@@ -745,5 +745,4 @@ void notAllowedPattern() {
 
 void loop() {
   // Main code here
->>>>>>> 715d890e809b2c7d94f17c36909e85aaca95b003
 }
