@@ -264,6 +264,79 @@ void checkboxPattern() {
 
 }
 
+void SliderFeedback(int value) {
+    int leftIntensity = 0;
+    int midIntensity = 0;
+    int rightIntensity = 0;
+
+    if (value <= 50) { // Left to mid transition
+        leftIntensity = map(value, 0, 50, 255, 0); // Full intensity on the left to off
+        midIntensity = map(value, 0, 50, 0, 255);  // Off to full intensity on the mid
+    } else { // Mid to right transition
+        midIntensity = map(value, 50, 100, 255, 0); // Full intensity on the mid to off
+        rightIntensity = map(value, 50, 100, 0, 255); // Off to full intensity on the right
+    }
+
+    analogWrite(VIBRATORS[0], leftIntensity);
+    analogWrite(VIBRATORS[1], midIntensity);
+    analogWrite(VIBRATORS[2], rightIntensity);
+}
+
+void DragVibration() {
+    // Vibrate all motors with low intensity while dragging
+    for (int i = 0; i < NUM_VIBRATORS; i++) {
+        analogWrite(VIBRATORS[i], 100); // Low intensity
+    }
+    delay(100); // Adjust delay as needed to control vibration frequency
+    for (int i = 0; i < NUM_VIBRATORS; i++) {
+        analogWrite(VIBRATORS[i], 0); // Turn off motors
+    }
+    delay(100); // Adjust delay as needed to control vibration frequency
+}
+
+void DropVibration() {
+    // Single intense vibration when dropping
+    for (int i = 0; i < NUM_VIBRATORS; i++) {
+        analogWrite(VIBRATORS[i], 255); // Maximum intensity
+    }
+    delay(200); // Intense vibration duration
+    for (int i = 0; i < NUM_VIBRATORS; i++) {
+        analogWrite(VIBRATORS[i], 0); // Turn off motors
+    }
+}
+
+void ScrollMovement() {
+    // Imitate scrolling movement with motors
+    for (int i = 0; i < sizeof(VIBRATORS); i++) {
+        analogWrite(VIBRATORS[i], 100); // Start vibration with low intensity
+        delay(50); // Short delay to simulate movement
+        analogWrite(VIBRATORS[i], 0); // Turn off the motor
+        delay(50); // Short delay before the next motor vibrates
+    }
+    for (int i = sizeof(VIBRATORS) - 1; i >= 0; i--) {
+        analogWrite(VIBRATORS[i], 100); // Start vibration with low intensity
+        delay(50); // Short delay to simulate movement
+        analogWrite(VIBRATORS[i], 0); // Turn off the motor
+        delay(50); // Short delay before the next motor vibrates
+    }
+}
+
+void StrongVibration(int direction) {
+    // Strong vibration in the scroll direction
+    if (direction == 1) { // Scroll down or right
+        for (int i = 0; i < sizeof(VIBRATORS); i++) {
+            analogWrite(VIBRATORS[i], 255); // Maximum intensity
+            delay(100); // Vibrate for 100 milliseconds
+            analogWrite(VIBRATORS[i], 0); // Turn off the motor
+        }
+    } else if (direction == -1) { // Scroll up or left
+        for (int i = sizeof(VIBRATORS) - 1; i >= 0; i--) {
+            analogWrite(VIBRATORS[i], 255); // Maximum intensity
+            delay(100); // Vibrate for 100 milliseconds
+            analogWrite(VIBRATORS[i], 0); // Turn off the motor
+        }
+    }
+}
 // Pattern for Radio Button: Circular movement across all vibrators
 void radioButtonPattern() {
   smoothTransition(links, oben, 100); 
