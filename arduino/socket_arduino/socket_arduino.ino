@@ -134,7 +134,7 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
         } else if (strcmp(msg, "submit") == 0) {
             submitPattern();
         } else if (strcmp(msg, "endVertical") == 0) {
-            // Code für endVertical
+          
         } else if (strcmp(msg, "endHorizontal") == 0) {
             // Code für endHorizontal
         } else {
@@ -149,7 +149,7 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
 
 
     void startDrag(){
-        
+        analogWrite(oben, )
     }
 
     void drop(){
@@ -341,8 +341,6 @@ void contextMenuPattern(){
     delay(500);
     analogWrite(mitte,0);
     delay(500);
-
-
 }
 
 void tooltipPattern() {
