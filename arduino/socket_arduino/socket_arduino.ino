@@ -13,7 +13,11 @@ const int links = 13;
 const int mitte = 33;
 const int oben = 15;
 
+<<<<<<< HEAD
 uint8_t pwmValue = 250; // 50% duty cycle
+=======
+uint8_t pwmValue = 255; // Set to full power
+>>>>>>> 715d890e809b2c7d94f17c36909e85aaca95b003
 
 int sliderValue = 0;  // Variable to store the slider value
 
@@ -28,6 +32,11 @@ void setup() {
         pinMode(VIBRATORS[i], OUTPUT);
     }
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 715d890e809b2c7d94f17c36909e85aaca95b003
     connectToWifi();
     ws.onEvent(onEvent);
     server.addHandler(&ws);
@@ -64,6 +73,10 @@ void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
     }
 }
 
+<<<<<<< HEAD
+=======
+// Funktion zur Verarbeitung der WebSocket-Nachricht
+>>>>>>> 715d890e809b2c7d94f17c36909e85aaca95b003
 void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
     AwsFrameInfo *info = (AwsFrameInfo*)arg;
     if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
@@ -79,17 +92,15 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
         }
 
         const char* msg = doc["message"];
+<<<<<<< HEAD
         JsonVariant msgData = doc["data"];
 
+=======
+        Serial.println(msg);
+>>>>>>> 715d890e809b2c7d94f17c36909e85aaca95b003
         if (strcmp(msg, "startdrag") == 0) {
             startDrag();
-        } else if (strcmp(msg, "dragover") == 0) {
-            JsonArray dataArray = doc["data"];
-            int data[4];
-            for (size_t i = 0; i < dataArray.size() && i < 4; ++i) {
-                data[i] = dataArray[i];
-            }
-            dragOver(data[0], data[1], data[2], data[3]);
+         
         } else if (strcmp(msg, "drop") == 0) {
             drop();
         } else if (strcmp(msg, "button") == 0) {
@@ -117,7 +128,27 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
         } else if (strcmp(msg, "endVertical") == 0) {
             // Code for endVertical
         } else if (strcmp(msg, "endHorizontal") == 0) {
+<<<<<<< HEAD
             // Code for endHorizontal
+=======
+            // Code für endHorizontal
+        } else if(strcmp(msg, "zoomIn") == 0) {
+            zoomInPattern();
+        }else if(strcmp(msg, "zoomOut") == 0) {
+            zoomOutPattern();
+         }
+         else if(strcmp(msg, "context")==0){
+            contextMenuPattern();
+         }
+         else if(strcmp(msg, "hover")==0){
+            hoverPattern();
+         }
+          else if(strcmp(msg, "tooltip")==0){
+             tooltipPattern();
+          }
+        else {
+            // Code für den Fall, dass kein anderer Fall zutrifft
+>>>>>>> 715d890e809b2c7d94f17c36909e85aaca95b003
         }
 
         Serial.printf("WebSocket JSON message received: message=%s\n", msg);
@@ -125,7 +156,65 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
 }
 
 void startDrag() {
+<<<<<<< HEAD
     // Code for startDrag
+=======
+    for (uint8_t i = 0; i < sizeof(VIBRATORS); i++) {
+        analogWrite(VIBRATORS[i], pwmValue);
+    }
+    delay(100);
+    for (uint8_t i = 0; i < sizeof(VIBRATORS); i++) {
+        analogWrite(VIBRATORS[i], 0);
+    }
+}
+
+void drop() {
+    for (uint8_t i = 0; i < sizeof(VIBRATORS); i++) {
+        analogWrite(VIBRATORS[i], pwmValue);
+    }
+    delay(100);
+    for (uint8_t i = 0; i < sizeof(VIBRATORS); i++) {
+        analogWrite(VIBRATORS[i], 0);
+    }
+}
+
+void selectClickPattern() {
+    for (uint8_t i = 0; i < sizeof(VIBRATORS); i++) {
+        analogWrite(VIBRATORS[i], pwmValue);
+    }
+    delay(100);
+    for (uint8_t i = 0; i < sizeof(VIBRATORS); i++) {
+        analogWrite(VIBRATORS[i], 0);
+    }
+}
+
+void selectChangePattern(int cur, int max) {
+    for (uint8_t i = 0; i < sizeof(VIBRATORS); i++) {
+        analogWrite(VIBRATORS[i], pwmValue);
+    }
+    delay(100);
+    for (uint8_t i = 0; i < sizeof(VIBRATORS); i++) {
+        analogWrite(VIBRATORS[i], 0);
+    }
+}
+
+void smoothTransition(int motor1, int motor2, int dauer) {
+  int stepDelay = dauer / 255; // Berechnung der Verzögerung pro Schritt als Ganzzahl
+  unsigned long previousMillis = millis();
+
+  for (int i = 0; i <= 255; i++) {
+    while (millis() - previousMillis < stepDelay) {
+      // Nichts tun, nur auf die nächste Iteration warten
+      // Dies verhindert eine Blockierung der CPU
+      Serial.print(".");
+    }
+    previousMillis = millis();
+    
+    analogWrite(motor1, 255 - i);
+    analogWrite(motor2, i);
+
+  }
+>>>>>>> 715d890e809b2c7d94f17c36909e85aaca95b003
 }
 
 void drop() {
@@ -159,9 +248,9 @@ void clickableButtonPattern() {
     for (uint8_t i = 0; i < sizeof(VIBRATORS); i++) {
         analogWrite(VIBRATORS[i], pwmValue);
     }
-    delay(100); // Buzz for 100 ms
+    delay(100);
     for (uint8_t i = 0; i < sizeof(VIBRATORS); i++) {
-        analogWrite(VIBRATORS[i], 0); // Turn off vibration
+        analogWrite(VIBRATORS[i], 0);
     }
 }
 
@@ -175,12 +264,17 @@ void clickableLinkPattern() {
 
 void textInputPattern() {
     for (int i = 0; i < 3; i++) {
+<<<<<<< HEAD
         analogWrite(mitte, pwmValue); // Mid vibrator (port 33)
+=======
+        analogWrite(mitte, pwmValue);
+>>>>>>> 715d890e809b2c7d94f17c36909e85aaca95b003
         delay(30);
         analogWrite(mitte, 0);
         delay(30);
     }
 }
+<<<<<<< HEAD
 
 void checkboxPattern() {
     smoothTransition(links, unten, 500); // Transition from left to bottom
@@ -193,6 +287,129 @@ void radioButtonPattern() {
     smoothTransition(oben, rechts, 100);
     smoothTransition(rechts, unten, 100);
     smoothTransition(unten, links, 100);
+=======
+
+void Waitcursor() {
+    for (int i = sizeof(VIBRATORS) - 1; i >= 0; i--) {
+        analogWrite(VIBRATORS[i], pwmValue);
+        delay(100);
+        analogWrite(VIBRATORS[i], 0);
+    }
+}
+
+void PointerCursor() {
+    for (int i = sizeof(VIBRATORS) - 1; i >= 0; i--) {
+        analogWrite(VIBRATORS[i], pwmValue);
+        delay(100);
+        analogWrite(VIBRATORS[i], 0);
+    }
+}
+
+void CrosshairCursor() {
+    for (int i = sizeof(VIBRATORS) - 1; i >= 0; i--) {
+        analogWrite(VIBRATORS[i], pwmValue);
+        delay(100);
+        analogWrite(VIBRATORS[i], 0);
+    }
+}
+
+void TextCursor() {
+    for (int i = sizeof(VIBRATORS) - 1; i >= 0; i--) {
+        analogWrite(VIBRATORS[i], pwmValue);
+        delay(100);
+        analogWrite(VIBRATORS[i], 0);
+    }
+}
+
+void MoveCursor() {
+    for (int i = sizeof(VIBRATORS) - 1; i >= 0; i--) {
+        analogWrite(VIBRATORS[i], pwmValue);
+        delay(100);
+        analogWrite(VIBRATORS[i], 0);
+    }
+}
+
+void checkboxPattern() {
+  
+ 
+}
+
+void SliderFeedback(int value) {
+    int leftIntensity = 0;
+    int midIntensity = 0;
+    int rightIntensity = 0;
+
+    if (value <= 50) {
+        leftIntensity = map(value, 0, 50, pwmValue, 0);
+        midIntensity = map(value, 0, 50, 0, pwmValue);
+    } else {
+        midIntensity = map(value, 50, 100, pwmValue, 0);
+        rightIntensity = map(value, 50, 100, 0, pwmValue);
+    }
+
+    analogWrite(VIBRATORS[0], leftIntensity);
+    analogWrite(VIBRATORS[1], midIntensity);
+    analogWrite(VIBRATORS[2], rightIntensity);
+}
+
+void DragVibration() {
+    for (int i = 0; i < sizeof(VIBRATORS); i++) {
+        analogWrite(VIBRATORS[i], pwmValue);
+    }
+    delay(100);
+    for (int i = 0; i < sizeof(VIBRATORS); i++) {
+        analogWrite(VIBRATORS[i], 0);
+    }
+    delay(100);
+}
+
+void DropVibration() {
+    for (int i = 0; i < sizeof(VIBRATORS); i++) {
+        analogWrite(VIBRATORS[i], pwmValue);
+    }
+    delay(200);
+    for (int i = 0; i < sizeof(VIBRATORS); i++) {
+        analogWrite(VIBRATORS[i], 0);
+    }
+}
+
+void ScrollMovement() {
+    for (int i = 0; i < sizeof(VIBRATORS); i++) {
+        analogWrite(VIBRATORS[i], pwmValue);
+        delay(50);
+        analogWrite(VIBRATORS[i], 0);
+        delay(50);
+    }
+    for (int i = sizeof(VIBRATORS) - 1; i >= 0; i--) {
+        analogWrite(VIBRATORS[i], pwmValue);
+        delay(50);
+        analogWrite(VIBRATORS[i], 0);
+        delay(50);
+    }
+}
+
+void StrongVibration(int direction) {
+    if (direction == 1) {
+        for (int i = 0; i < sizeof(VIBRATORS); i++) {
+            analogWrite(VIBRATORS[i], pwmValue);
+            delay(100);
+            analogWrite(VIBRATORS[i], 0);
+        }
+    } else if (direction == -1) {
+        for (int i = sizeof(VIBRATORS) - 1; i >= 0; i--) {
+            analogWrite(VIBRATORS[i], pwmValue);
+            delay(100);
+            analogWrite(VIBRATORS[i], 0);
+        }
+    }
+}
+
+void radioButtonPattern() {
+  smoothTransition(links, oben, 100);
+  smoothTransition(oben, rechts, 100);
+  smoothTransition(rechts, unten, 100);
+  smoothTransition(unten, links, 100);
+>>>>>>> 715d890e809b2c7d94f17c36909e85aaca95b003
 }
 
 void dropdownPattern() {
@@ -204,10 +421,17 @@ void dropdownPattern() {
 }
 
 void sliderPattern(int value) {
-    int position = map(value, 0, 100, 1, 3);
-    analogWrite(VIBRATORS[position], pwmValue);
-    delay(100);
-    analogWrite(VIBRATORS[position], 0);
+    if(value<33){
+      analogWrite(links, pwmValue);
+
+    }
+    if(value>33 && value<66){
+      analogWrite(mitte, pwmValue);
+
+    }
+    if(value>66 && value<100){
+      analogWrite(rechts, pmwValue);
+    }
 }
 
 void submitPattern() {
@@ -223,6 +447,7 @@ void submitPattern() {
     }
 }
 
+<<<<<<< HEAD
 void dragOver(int x, int y, int max_x, int max_y) {
     float l = 255;
     float o = 255;
@@ -270,4 +495,255 @@ void dragOver(int x, int y, int max_x, int max_y) {
 void loop() {
     // Main code here
     ws.cleanupClients();
+=======
+void scrollPattern() {
+    for (int i = 0; i < sizeof(VIBRATORS); i++) {
+        analogWrite(VIBRATORS[i], pwmValue);
+        delay(50);
+        analogWrite(VIBRATORS[i], 0);
+    }
+}
+
+void endScrollPattern() {
+    analogWrite(VIBRATORS[4], pwmValue);
+    delay(300);
+    analogWrite(VIBRATORS[4], 0);
+}
+
+void contextMenuPattern() {
+    analogWrite(links, pwmValue);
+    delay(500);
+    analogWrite(links, 0);
+    delay(500);
+
+    analogWrite(mitte, pwmValue);
+    delay(500);
+    analogWrite(mitte, 0);
+    delay(500);
+
+    analogWrite(rechts, pwmValue);
+    delay(500);
+    analogWrite(mitte, 0);
+    delay(500);
+}
+
+void tooltipPattern() {
+    int obenIntensity = pwmValue;
+    int transitionThreshold = 120;
+
+    while (obenIntensity >= 0) {
+        analogWrite(oben, obenIntensity);
+
+        if (obenIntensity <= transitionThreshold) {
+            int sidesIntensity = pwmValue - obenIntensity;
+            analogWrite(mitte, sidesIntensity);
+            analogWrite(links, sidesIntensity);
+            analogWrite(rechts, sidesIntensity);
+            analogWrite(unten, sidesIntensity);
+        }
+
+        obenIntensity--;
+        delay(5);
+    }
+
+    analogWrite(oben, 0);
+    analogWrite(mitte, 0);
+    analogWrite(links, 0);
+    analogWrite(rechts, 0);
+    analogWrite(unten, 0);
+}
+
+void dragOver(int x, int y, int max_x, int max_y) {
+    float l = pwmValue;
+    float o = pwmValue;
+    float u = pwmValue;
+    float r = pwmValue;
+    float m = pwmValue;
+
+    float norm_x = (float)x / max_x;
+    float norm_y = (float)y / max_y;
+
+    float center_x = 0.5;
+    float center_y = 0.5;
+
+    float dist_to_center = sqrt(pow(norm_x - center_x, 2) + pow(norm_y - center_y, 2));
+    float max_dist = sqrt(0.5 * 0.5 + 0.5 * 0.5);
+    float normalized_dist = dist_to_center / max_dist;
+    float inverted_value = (1 - normalized_dist);
+
+    m = m * inverted_value;
+    l = l * norm_x;
+    r = r * (1 - norm_x);
+    o = o * norm_y;
+    u = u * (1 - norm_y);
+
+    analogWrite(links, l);
+    analogWrite(rechts, r);
+    analogWrite(oben, o);
+    analogWrite(unten, u);
+    analogWrite(mitte, m);
+    delay(200);
+
+    Serial.print("Left: ");
+    Serial.print(l);
+    Serial.print(", Right: ");
+    Serial.print(r);
+    Serial.print(", Top: ");
+    Serial.print(o);
+    Serial.print(", Bottom: ");
+    Serial.print(u);
+    Serial.print(", Middle: ");
+    Serial.println(m);
+}
+
+void hoverPattern() {
+    analogWrite(links, pwmValue);
+    analogWrite(rechts, pwmValue);
+    analogWrite(oben, pwmValue);
+    analogWrite(unten, pwmValue);
+    analogWrite(mitte, pwmValue);
+    delay(200);
+    analogWrite(links, 0);
+    analogWrite(rechts, 0);
+    analogWrite(oben, 0);
+    analogWrite(unten, 0);
+    analogWrite(mitte, 0);
+}
+
+void grabPattern() {
+    int stepDelay = 5;
+    int intensity = 1;
+    int innen = pwmValue;
+    int außen = 100;
+
+    while (innen > 0 && außen < pwmValue) {
+        innen -= intensity;
+        außen += intensity;
+        analogWrite(oben, außen);
+        analogWrite(unten, außen);
+        analogWrite(links, außen);
+        analogWrite(rechts, außen);
+        analogWrite(mitte, innen);
+        delay(stepDelay);
+    }
+    analogWrite(oben, 0);
+    analogWrite(unten, 0);
+    analogWrite(links, 0);
+    analogWrite(rechts, 0);
+}
+
+void noDropPattern() {
+    analogWrite(oben, pwmValue);
+    analogWrite(unten, pwmValue);
+    analogWrite(links, pwmValue);
+    analogWrite(rechts, pwmValue);
+    analogWrite(mitte, pwmValue);
+
+    delay(1000);
+
+    analogWrite(oben, 0);
+    analogWrite(unten, 0);
+    analogWrite(links, 0);
+    analogWrite(rechts, 0);
+    analogWrite(mitte, 0);
+}
+
+void zoomInPattern() {
+    int stepDelay = 10;
+    int intensity = 1;
+    int innen = pwmValue;
+    int außen = 100;
+
+    while (innen > 0 && außen < pwmValue) {
+        innen -= intensity;
+        außen += intensity;
+        analogWrite(oben, außen);
+        analogWrite(unten, außen);
+        analogWrite(links, außen);
+        analogWrite(rechts, außen);
+        analogWrite(mitte, innen);
+        delay(stepDelay);
+    }
+    analogWrite(oben, 0);
+    analogWrite(unten, 0);
+    analogWrite(links, 0);
+    analogWrite(rechts, 0);
+}
+
+void zoomOutPattern() {
+    int stepDelay = 10;
+    int intensity = 1;
+    int innen = 0;
+    int außen = pwmValue;
+
+    while (innen < pwmValue && außen > 0) {
+        innen += intensity;
+        außen -= intensity;
+        analogWrite(oben, außen);
+        analogWrite(unten, außen);
+        analogWrite(links, außen);
+        analogWrite(rechts, außen);
+        analogWrite(mitte, innen);
+        delay(stepDelay);
+
+        // Reset the watchdog timer to prevent it from timing out
+    }
+    analogWrite(oben, 0);
+    analogWrite(unten, 0);
+    analogWrite(links, 0);
+    analogWrite(rechts, 0);
+}
+
+
+void waitPattern() {
+    int stepDelay = 100;
+    int maxIntensity = pwmValue;
+    int minIntensity = 0;
+    int steps = 20;
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < steps; j++) {
+            int intensity = (maxIntensity * j) / steps;
+
+            analogWrite(oben, intensity);
+            delay(stepDelay);
+            analogWrite(oben, minIntensity);
+
+            analogWrite(rechts, intensity);
+            delay(stepDelay);
+            analogWrite(rechts, minIntensity);
+
+            analogWrite(unten, intensity);
+            delay(stepDelay);
+            analogWrite(unten, minIntensity);
+
+            analogWrite(links, intensity);
+            delay(stepDelay);
+            analogWrite(links, minIntensity);
+        }
+    }
+}
+
+void notAllowedPattern() {
+    int pulseDuration = 500;
+    int intensity = pwmValue;
+
+    analogWrite(oben, intensity);
+    analogWrite(unten, intensity);
+    analogWrite(links, intensity);
+    analogWrite(rechts, intensity);
+    analogWrite(mitte, intensity);
+
+    delay(pulseDuration);
+
+    analogWrite(oben, 0);
+    analogWrite(unten, 0);
+    analogWrite(links, 0);
+    analogWrite(rechts, 0);
+    analogWrite(mitte, 0);
+}
+
+void loop() {
+  // Main code here
+>>>>>>> 715d890e809b2c7d94f17c36909e85aaca95b003
 }

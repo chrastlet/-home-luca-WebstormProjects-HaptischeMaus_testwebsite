@@ -15,6 +15,38 @@ header {
 main {
     padding: 20px;
 }
+.zoom-area {
+    width: 600px;
+    height: 400px;
+    border: 2px solid black;
+    background-image: url('https://via.placeholder.com/600x400');
+    background-size: 100% 100%;
+    cursor: zoom-in;
+    overflow: hidden;
+    position: relative;
+}
+
+.zoomed {
+    transform: scale(2);
+    cursor: zoom-out;
+}
+
+<style>
+ #wait-cursor-button {
+     cursor: wait;
+ }
+#pointer-cursor-button {
+    cursor: pointer;
+}
+#crosshair-cursor-button {
+    cursor: crosshair;
+}
+#text-cursor-button {
+    cursor: text;
+}
+#move-cursor-button {
+    cursor: move;
+}
 
 section {
     margin-bottom: 20px;

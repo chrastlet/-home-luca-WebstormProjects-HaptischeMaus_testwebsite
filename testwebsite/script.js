@@ -57,6 +57,43 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+
+
+    const changeCursorTemporarily = (element, cursorType, message) => {
+        const originalCursor = document.body.style.cursor;
+        document.body.style.cursor = cursorType;
+
+        const intervalId = setInterval(() => {
+            sendToArduino(message, `Cursor changed to ${cursorType}`);
+        }, 1000); // Send message every second
+
+        setTimeout(() => {
+            clearInterval(intervalId);
+            document.body.style.cursor = originalCursor;
+        }, 5000); // Reset cursor after 5 seconds
+    };
+
+    document.getElementById('wait-cursor-button').addEventListener('click', () => {
+        changeCursorTemporarily(document.body, 'wait', 'Wait Cursor');
+    });
+
+    document.getElementById('pointer-cursor-button').addEventListener('click', () => {
+        changeCursorTemporarily(document.body, 'pointer', 'Pointer Cursor');
+    });
+
+    document.getElementById('crosshair-cursor-button').addEventListener('click', () => {
+        changeCursorTemporarily(document.body, 'crosshair', 'Crosshair Cursor');
+    });
+
+    document.getElementById('text-cursor-button').addEventListener('click', () => {
+        changeCursorTemporarily(document.body, 'text', 'Text Cursor');
+    });
+
+    document.getElementById('move-cursor-button').addEventListener('click', () => {
+        changeCursorTemporarily(document.body, 'move', 'Move Cursor');
+    });
+
+    /*
     // Drag and drop functionality
     const draggable = document.getElementById('draggable');
     const dropZone = document.getElementById('drop-zone');
@@ -89,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Dropped in drop zone');
         sendToArduino('drop', 100);
     });
-
+*/
     document.getElementById('clickable-button').addEventListener('click', () => {
         console.log('Clickable button clicked');
         sendToArduino('button', 100);
@@ -117,6 +154,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     });
 
+
+    document.getElementById('context-menu-area').addEventListener('click',()=>{
+        sendToArduino('context', 100);
+
+    })
+
+
+    document.getElementById('tooltip-area').addEventListener('click',()=>{
+        sendToArduino('tooltip', 100);
+
+    })
+
+
+    document.getElementById("hover-area").addEventListener("click", () =>{
+        sendToArduino('hover', 100);
+
+    })
     document.getElementById('textarea').addEventListener('blur', () => {
         clearInterval(textInputInterval);
     });
@@ -156,6 +210,36 @@ document.addEventListener('DOMContentLoaded', () => {
             sendToArduino('endHorizontal'); // End of horizontal scroll
         }
     });
+
+
+    const zoomArea = document.getElementById('zoomArea');
+    let zoomedIn = false;
+
+    zoomArea.addEventListener('click', function() {
+        if (zoomedIn) {
+            sendToArduino('zoomOut',100);
+
+            zoomArea.classList.remove('zoomed');
+            zoomArea.style.backgroundSize = '100% 100%';
+        } else {
+            sendToArduino('zoomIn',100);
+
+            zoomArea.classList.add('zoomed');
+            zoomArea.style.backgroundSize = '200% 200%';
+        }
+
+        zoomedIn = !zoomedIn;
+    });
+
+    zoomArea.addEventListener('mousemove', function(event) {
+        if (zoomedIn) {
+            const rect = zoomArea.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            zoomArea.style.backgroundPosition = `-${x}px -${y}px`;
+        }
+    });
+
 
     // Add any additional event listeners as needed
 });
